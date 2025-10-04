@@ -1,0 +1,30 @@
+.check-container {
+   
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .checkmark {
+    box-sizing: border-box;
+  }
+  
+  /* On mouse-over, add a grey background color */
+  .check-container:hover input ~ .checkmark {
+    background-color: #F9F5FF;
+  }
+  
+  /* When the checkbox is checked, add a blue background */
+  .check-container input:checked ~ .checkmark {
+    border: 1px solid #7F56D9;
+    box-sizing: border-box;
+    background-color: #F9F5FF;
+
+  }
+  
+  /* Show the checkmark when checked */
+  .check-container input:checked ~ .checkmark svg {
+    display: block;
+  }
+  

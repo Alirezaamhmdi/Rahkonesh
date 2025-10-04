@@ -1,0 +1,99 @@
+.description p {
+    opacity: 51%;
+}
+path{
+  fill: inherit;
+}
+.stroke-svg path{
+  stroke: inherit;
+}
+.primary-linear-1000 { 
+    background  : linear-gradient(180deg, #E2AEFA 0%, #EAC1FD 42.31%, #E3ACFD 100%);
+
+
+}
+.hover-primary-inner-text .hover-inner:hover{
+  color : rgba(148, 41, 197, 1)
+
+}
+.primary {
+  background : #9429c5
+}
+.primary-hover {
+  background : rgba(148, 41, 197, 1)
+}
+.primary-hover :hover {
+  background : rgba(148, 41, 197, 0.3)
+}
+.primary-text {
+  color : rgba(148, 41, 197, 1)
+}
+.description { 
+    color : rgba(83, 89, 102, 0.59) ; 
+}
+.text-like-black{ 
+    color : oklch(21% 0.034 264.665)
+}
+.passcode-container {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.passcode-digit {
+  height: 50px;
+  text-align: center;
+}
+
+.passcode-digit:focus {
+  outline: 2px solid #4a90e2;
+  border-color: transparent;
+}
+.icon_neutral { 
+    color : rgba(101, 114, 130, 1)
+}
+.neutral-8{
+  color : rgba(57, 71, 91, 1) ; 
+}
+.neutral-4{
+  color : rgba(166, 173, 183, 1)
+}
+.bg-neutral-3 { 
+  background : rgba(212, 217, 224, 1)
+}
+.neutral-7 .neutral-7-text {
+  color : rgba(82, 92, 105, 1)
+}
+.fuchsia-4{
+  background : rgba(251, 185, 231, 1)
+}
+.primary-5 {
+  background : rgba(208, 139, 240, 1)
+}
+.primary-100{
+  background : #FBF4FF ; 
+}
+.white_to_primary-100 { 
+  background : white ; 
+  color : #2C3643 ; 
+}
+.white_to_primary-100:hover { 
+  background : #FBF4FF ;
+  color : #9429C5;
+}
+.bg-neutral-1000{
+  background: #1E2938;
+}
+.bg-neutral-100{
+  background: #F2F3F4;
+}
+.neutral-500{
+  color: #7B8592;
+}
+.neutral-600{
+  color: #657282;
+}
+.bg-glass{
+  background: rgba(255, 255, 255, 0.20);
+  backdrop-filter: blur(15.600000381469727px);
+}

@@ -1,0 +1,18 @@
+@font-face {
+  font-family: 'estedad-medium';
+  src: url('../font/Estedad-Medium.ttf') format('truetype');
+}
+
+
+/* Apply to all elements */
+* {
+  font-family: 'estedad-medium', sans-serif !important;
+    font-variant-numeric: arabic-indic;
+  /* or for more specific control: */
+  font-variant-numeric: numeric;
+
+}
+@counter-style arabic-indic {
+  system: numeric;
+  symbols: "۰" "۱" "۲" "۳" "۴" "۵" "۶" "۷" "۸" "۹";
+}

@@ -1,0 +1,10 @@
+.go-come {
+    
+  animation: gocome 2s infinite ease-in-out;
+}
+
+@keyframes gocome {
+  0% { width: 0; opacity: 0.5; }
+  50% { width: 100%; opacity: 1; }
+  100% { width: 0; opacity: 0.5; }
+}

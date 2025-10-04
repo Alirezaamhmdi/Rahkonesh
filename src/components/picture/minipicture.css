@@ -1,0 +1,25 @@
+
+.animate-loading  {
+  /* position: absolute;s */
+  background: linear-gradient(
+    90deg,
+    #e5e7eb 0%,    /* neutral-200 */
+    #d4d4d8 50%,   /* neutral-300 */
+    #e5e7eb 100%   /* neutral-200 */
+  );
+  background-size: 200% 100%;
+  animation: loadingAnimation 1.5s ease-in-out infinite;
+}
+
+@keyframes loadingAnimation {
+  0% {
+    background-position: 100% 0;
+  }
+  50% {
+    background-position: 0 0;
+  }
+  100%{
+    background-position: 100% 0;
+  }
+}
+

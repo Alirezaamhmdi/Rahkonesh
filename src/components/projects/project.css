@@ -1,0 +1,47 @@
+.transform-color {
+  transition: background-color 0.3s ease;
+
+    
+}
+
+.custom-container {
+  cursor : grab;
+}
+.custom-container:focus {
+  cursor: grabbing;
+}
+
+.loading-bar {
+
+  background-color: #e5e7eb; /* neutral-200 */
+  border-radius: 9999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.loading-progress {
+  /* position: absolute;s */
+  background: linear-gradient(
+    90deg,
+    #e5e7eb8f 0%,    /* neutral-200 */
+    #d4d4d88f 50%,   /* neutral-300 */
+    #e5e7eb8f 100%   /* neutral-200 */
+  );
+  background-size: 200% 100%;
+  animation: loadingAnimation 1.5s ease-in-out infinite;
+}
+
+@keyframes loadingAnimation {
+  0% {
+    background-position: 100% 0;
+  }
+  50% {
+    background-position: 0 0;
+  }
+  100%{
+    background-position: 100% 0;
+  }
+}
+.overlaping {
+  pointer-events: none;
+}

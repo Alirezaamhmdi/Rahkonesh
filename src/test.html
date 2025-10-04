@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Grid System with Tailwind</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce 2s infinite',
+                        'spin-slow': 'spin 4s linear infinite',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gradient-to-br from-indigo-900 via-purple-800 to-pink-700 min-h-screen text-white p-5">
+    <div class="container mx-auto max-w-6xl">
+        <!-- Header -->
+        <header class="text-center py-8">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 text-white drop-shadow-lg">Animated Grid Transitions</h1>
+            <p class="text-lg text-indigo-100">Change grid layouts with smooth transitions while maintaining animations</p>
+        </header>
+
+        <!-- Controls -->
+        <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 mb-8 flex flex-wrap justify-center gap-6">
+            <div class="flex flex-col items-center">
+                <label class="mb-2 font-medium">Grid Layout</label>
+                <select id="layoutSelect" class="px-4 py-2 rounded-lg bg-white text-gray-800 font-medium cursor-pointer transition hover:bg-gray-100 focus:ring-2 focus:ring-indigo-400">
+                    <option value="grid-cols-1 grid-rows-6">1 Column</option>
+                    <option value="grid-cols-2 grid-rows-3">2 Columns</option>
+                    <option value="grid-cols-3 grid-rows-2" selected>3 Columns</option>
+                    <option value="grid-cols-6 grid-rows-1">6 Columns</option>
+                    <option value="grid-cols-4 grid-rows-2 gap-12">4 Columns (Large Gap)</option>
+                </select>
+            </div>
+            
+            <div class="flex flex-col items-center">
+                <label class="mb-2 font-medium">Animation Type</label>
+                <select id="animationSelect" class="px-4 py-2 rounded-lg bg-white text-gray-800 font-medium cursor-pointer transition hover:bg-gray-100 focus:ring-2 focus:ring-indigo-400">
+                    <option value="animate-pulse">Pulse</option>
+                    <option value="animate-bounce" selected>Bounce</option>
+                    <option value="animate-ping">Ping</option>
+                    <option value="animate-pulse-slow">Slow Pulse</option>
+                    <option value="animate-bounce-slow">Slow Bounce</option>
+                </select>
+            </div>
+            
+            <div class="flex flex-col items-center">
+                <label class="mb-2 font-medium">Item Color</label>
+                <select id="colorSelect" class="px-4 py-2 rounded-lg bg-white text-gray-800 font-medium cursor-pointer transition hover:bg-gray-100 focus:ring-2 focus:ring-indigo-400">
+                    <option value="bg-blue-500">Blue</option>
+                    <option value="bg-purple-500" selected>Purple</option>
+                    <option value="bg-pink-500">Pink</option>
+                    <option value="bg-teal-500">Teal</option>
+                    <option value="bg-amber-500">Amber</option>
+                </select>
+            </div>
+            
+            <div class="flex items-end">
+                <button id="resetButton" class="px-4 py-2 rounded-lg bg-rose-600 text-white font-medium cursor-pointer transition hover:bg-rose-700 focus:ring-2 focus:ring-rose-400">
+                    Reset to Default
+                </button>
+            </div>
+        </div>
+
+        <!-- Grid Container -->
+        <div class="bg-white/10 backdrop-blur-md rounded-xl p-6 mb-8 overflow-hidden">
+            <div id="grid" class="grid grid-cols-3 grid-rows-2 gap-6 transition-all duration-500 ease-in-out">
+                <div class="grid-item animate-bounce bg-purple-500 rounded-xl p-6 flex items-center justify-center text-xl font-bold shadow-lg transform transition duration-300 hover:scale-105">
+                    Item 1
+                </div>
+                <div class="grid-item animate-bounce bg-purple-500 rounded-xl p-6 flex items-center justify-center text-xl font-bold shadow-lg transform transition duration-300 hover:scale-105">
+                    Item 2
+                </div>
+                <div class="grid-item animate-bounce bg-purple-500 rounded-xl p-6 flex items-center justify-center text-xl font-bold shadow-lg transform transition duration-300 hover:scale-105">
+                    Item 3
+                </div>
+                <div class="grid-item animate-bounce bg-purple-500 rounded-xl p-6 flex items-center justify-center text-xl font-bold shadow-lg transform transition duration-300 hover:scale-105">
+                    Item 4
+                </div>
+                <div class="grid-item animate-bounce bg-purple-500 rounded-xl p-6 flex items-center justify-center text-xl font-bold shadow-lg transform transition duration-300 hover:scale-105">
+                    Item 5
+                </div>
+                <div class="grid-item animate-bounce bg-purple-500 rounded-xl p-6 flex items-center justify-center text-xl font-bold shadow-lg transform transition duration-300 hover:scale-105">
+                    Item 6
+                </div>
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="bg-white/10 backdrop-blur-md rounded-xl p-6">
+            <h2 class="text-2xl font-bold mb-4">How It Works</h2>
+            <ul class="list-disc pl-5 space-y-2">
+                <li>Select different grid layouts from the dropdown to see smooth transitions</li>
+                <li>Each grid item maintains its animation during layout changes</li>
+                <li>Change animation types to see different effects</li>
+                <li>Customize the color scheme of the grid items</li>
+                <li>Hover over grid items to see additional interactions</li>
+                <li>Click "Reset to Default" to restore original settings</li>
+            </ul>
+        </div>
+
+        <!-- Footer -->
+        <footer class="text-center py-8 text-indigo-200">
+            <p>Created with Tailwind CSS • Smooth grid transitions with maintained animations</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const grid = document.getElementById('grid');
+            const layoutSelect = document.getElementById('layoutSelect');
+            const animationSelect = document.getElementById('animationSelect');
+            const colorSelect = document.getElementById('colorSelect');
+            const resetButton = document.getElementById('resetButton');
+            const gridItems = document.querySelectorAll('.grid-item');
+            
+            // Store original classes for reset
+            const originalGridClasses = grid.className;
+            const originalItemClasses = Array.from(gridItems).map(item => item.className);
+            
+            // Update grid layout
+            layoutSelect.addEventListener('change', function() {
+                // Remove existing grid classes
+                const classes = grid.className.split(' ');
+                const gridClasses = classes.filter(cls => 
+                    !cls.startsWith('grid-cols-') && 
+                    !cls.startsWith('grid-rows-') && 
+                    !cls.startsWith('gap-')
+                );
+                
+                // Add new selected classes
+                grid.className = [...gridClasses, ...this.value.split(' ')].join(' ');
+            });
+            
+            // Update animations
+            animationSelect.addEventListener('change', function() {
+                gridItems.forEach(item => {
+                    // Remove existing animation classes
+                    const classes = item.className.split(' ');
+                    const filteredClasses = classes.filter(cls => 
+                        !cls.startsWith('animate-')
+                    );
+                    
+                    // Add new animation class
+                    item.className = [...filteredClasses, this.value].join(' ');
+                });
+            });
+            
+            // Update colors
+            colorSelect.addEventListener('change', function() {
+                gridItems.forEach(item => {
+                    // Remove existing color classes
+                    const classes = item.className.split(' ');
+                    const filteredClasses = classes.filter(cls => 
+                        !cls.startsWith('bg-') || 
+                        cls.startsWith('bg-gradient-to-')
+                    );
+                    
+                    // Add new color class
+                    item.className = [...filteredClasses, this.value].join(' ');
+                });
+            });
+            
+            // Reset to default
+            resetButton.addEventListener('click', function() {
+                grid.className = originalGridClasses;
+                layoutSelect.value = 'grid-cols-3 grid-rows-2';
+                animationSelect.value = 'animate-bounce';
+                colorSelect.value = 'bg-purple-500';
+                
+                gridItems.forEach((item, index) => {
+                    item.className = originalItemClasses[index];
+                });
+            });
+        });
+    </script>
+</body>
+</html>

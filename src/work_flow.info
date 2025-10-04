@@ -1,0 +1,6 @@
+we started the vite programm by 
+- npm create vite@latest
+we built the vite project on typescript + swc + React
+we also installed redux 
+we installed tailwind
+- npm install tailwindcss @tailwindcss/vite

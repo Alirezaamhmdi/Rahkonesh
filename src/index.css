@@ -1,0 +1,9 @@
+
+
+.root{ 
+    background-color : #ffffff
+}
+
+body{
+    background-color: var(--color-neutral-100) 
+}
