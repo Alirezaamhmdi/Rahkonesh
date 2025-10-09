@@ -14,6 +14,8 @@ import office from '/src/assets/png/homeOffice.png';
 import miniLogo from '/src/assets/svg/miniLogo.svg';
 import teamyer_typograph from '/src/assets/svg/teamyer_mini_type_graphy.svg';
 import CallenderWeekDay from './inner_tasks/callender.tsx';
+import LoginSignIn from './pages/login_sigin.tsx';
+import AuthLayout from './layout/authLayout.tsx';
 const App : React.FC = () => {
   const location = useLocation();
   const background = location.state && location.state.background;
@@ -38,11 +40,18 @@ const App : React.FC = () => {
           <Route path="calendar" element={<CallenderWeekDay />} />
         </Route>
 
+        <Route path="loginsignIn" element={<LoginSignIn/>}/>
+        <Route path='authlayout' element={<AuthLayout/>}/>
+
+  
+        
       </Routes>
       {background && (
         <Routes>
           <Route path="c/:id" element={<EditTask />} />
         </Routes>
+
+        
 
 )}
 </logos.Provider > 
