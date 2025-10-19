@@ -4,6 +4,34 @@ import axios from "axios";
 import { useState } from "react";
 
 const Login = () => {
+  const [loading, setLoading] = useState<boolean>(false);
+  const [userName, setUserName] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  function handelClick(e: any) {
+    e.preventDefault();
+    setLoading(true);
+
+    let sendData = {
+      username: userName,
+      password: password,
+    };
+
+    axios
+      .post(`http://185.221.237.102:1400/auth/login`, sendData)
+      .then((response) => {
+        console.log(response.data);
+        setLoading(false);
+
+        Cookies.set("auth.rahkonesh", response.data.accessToken, {
+          expires: 30,
+        });
+      })
+      .catch((err) => {
+        setLoading(false);
+      });
+  }
+
   return (
     <AuthLayout>
       <div dir="rtl">
@@ -18,8 +46,11 @@ const Login = () => {
             نام کاربری
           </label>
           <input
-            placeholder="برای مثال alirezam"
+            placeholder="برای مثال alireza"
             type="text"
+            onChange={(e) => {
+              setUserName(e.target.value);
+            }}
             className="text-right px-[20px] text-base h-[52px] w-full neutral-8 border border-neutral-300 rounded-[16px] focus:border-primary-500"
           />
         </div>
@@ -30,12 +61,21 @@ const Login = () => {
           <input
             placeholder="********"
             type="text"
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
             className="text-right px-[20px] text-base h-[52px] w-full neutral-8 border border-neutral-300 rounded-[16px] focus:border-primary-500"
           />
         </div>
         <div>
-          <button className="h-[48px] w-full bg-primary-1000 hover:bg-primary-300 text-white border border-neutral-300 rounded-[16px]">
+          <button
+            onClick={handelClick}
+            className="h-[48px] relative w-full bg-primary-1000 hover:bg-primary-300 transition text-white border border-neutral-300 rounded-[16px]"
+          >
             ورود
+            {loading && (
+              <div className="loader w-[30px] border-[4px] border-primary-700 absolute top-[8px] left-[10px]"></div>
+            )}
           </button>
         </div>
       </div>

@@ -109,7 +109,9 @@ const Signup = () => {
             className="h-[48px] relative w-full bg-primary-1000  hover:bg-primary-300 transition text-white border border-neutral-300 rounded-[16px]"
           >
             ثبت نام
-            {loading&&<div className="loader w-[30px] border-[4px] border-primary-700 absolute top-[8px] left-[10px]"></div>}
+            {loading && (
+              <div className="loader w-[30px] border-[4px] border-primary-700 absolute top-[8px] left-[10px]"></div>
+            )}
           </button>
         </div>
       </div>
