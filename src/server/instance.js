@@ -3,16 +3,14 @@ import axiosRetry from 'axios-retry';
 import Cookies from 'js-cookie';
 
 
-    const auth = Cookies.get('auth.timyer.ir');
-    const work = Cookies.get('workspace.timyer.ir');
+    const auth = Cookies.get('auth.rahkonesh');
 
 
     const instance =axios.create({
       // baseURL: 'http://localhost:4000 ',
-      baseURL: 'https://teamyer-backend.liara.run',
+      baseURL: 'http://185.221.237.102:1400',
       headers: {
           Authorization: `Bearer ${auth}`,
-          "worspacerole": work
       }
   });
 
