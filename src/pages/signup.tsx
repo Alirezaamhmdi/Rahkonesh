@@ -3,43 +3,70 @@ import Cookies from "js-cookie";
 import axios from "axios";
 import { useState } from "react";
 
-//width fagaht ba rem.
-// paddin va ... : pixel
-// font: tailwind default
-// bishtar az padding estefade konim ta margin
-// items-end dar div balaye label bara chi bood?
+import { useForm } from "react-hook-form";
+import type { Resolver } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import signupValidator, { type SignupFormData } from "../validator/signupValidator";
 
-const Signup = () => {
+const Signup: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [name, setName] = useState<string>("");
-  const [lastName, setLastName] = useState<string>("");
-  const [userName, setUserName] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
 
-  function handelClick(e: any) {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors },
+  } = useForm<SignupFormData>({
+    resolver: yupResolver(signupValidator) as Resolver<SignupFormData, any>,
+    defaultValues: {
+      name: "",
+      lastName: "",
+      username: "",
+      password: "",
+    },
+  });
+
+  async function handelClick(formValues: SignupFormData) {
     setLoading(true);
 
-    let sendData = {
-      name: name,
-      lastname: lastName,
-      username: userName,
-      password: password,
+    const sendData = {
+      name: formValues.name,
+      lastname: formValues.lastName,
+      username: formValues.username,
+      password: formValues.password,
     };
 
-    axios
-      .post(`http://185.221.237.102:1400/auth/register`, sendData)
-      .then((response) => {
-        console.log(response.data);
-        setLoading(false);
+    try {
+      const response = await axios.post(
+        `http://185.221.237.102:1400/auth/register`,
+        sendData
+      );
 
-        Cookies.set("auth.rahkonesh", response.data.accessToken, {
-          expires: 30,
-        });
-      })
-      .catch((err) => {
-        setLoading(false);
+      console.log(response.data);
+      Cookies.set("auth.rahkonesh", response.data.accessToken, {
+        expires: 30,
       });
+    } catch (err: any) {
+      const message = err?.response?.data?.message || err?.message;
+
+      if (message) {
+        if (message.toLowerCase().includes("username") || message.includes("کاربری")) {
+          setError("username", { type: "server", message });
+        } else if (message.toLowerCase().includes("name") || message.includes("نام ")) {
+          setError("name", { type: "server", message });
+        } else if (message.toLowerCase().includes("lastname") || message.toLowerCase().includes("lastname") || message.includes("خانوادگی")) {
+          setError("lastName" as keyof SignupFormData, { type: "server", message } as any);
+        } else if (message.toLowerCase().includes("password") || message.includes("رمز")) {
+          setError("password", { type: "server", message });
+        } else {
+          setError("username", { type: "server", message });
+        }
+      } else {
+        setError("username", { type: "server", message: "خطا در برقراری ارتباط با سرور" });
+      }
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -58,11 +85,16 @@ const Signup = () => {
           <input
             placeholder="برای مثال علیرضا"
             type="text"
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
+            {...register("name")}
+            aria-invalid={!!errors.name}
+            aria-describedby={errors.name ? "name-error" : undefined}
             className="text-right px-[20px] text-base h-[52px] w-full border border-neutral-300 rounded-[16px] focus:border-primary-500"
           />
+          {errors.name && (
+            <p id="name-error" className="mt-1 text-sm text-red-600">
+              {errors.name.message}
+            </p>
+          )}
         </div>
         <div className="pb-[28px] flex flex-col justify-center w-full">
           <label className="pb-[12px] flex items-center pr-2 text-neutral-400">
@@ -71,11 +103,16 @@ const Signup = () => {
           <input
             placeholder="برای مثال محمدی"
             type="text"
-            onChange={(e) => {
-              setLastName(e.target.value);
-            }}
+            {...register("lastName")}
+            aria-invalid={!!errors.lastName}
+            aria-describedby={errors.lastName ? "lastName-error" : undefined}
             className="text-right px-[20px] text-base h-[52px] w-full neutral-8 border border-neutral-300 rounded-[16px] focus:border-primary-500"
           />
+          {errors.lastName && (
+            <p id="lastName-error" className="mt-1 text-sm text-red-600">
+              {errors.lastName.message}
+            </p>
+          )}
         </div>
         <div className="pb-[28px] flex flex-col justify-center w-full">
           <label className="pb-[12px] flex items-center pr-2 text-neutral-400">
@@ -84,11 +121,16 @@ const Signup = () => {
           <input
             placeholder="برای مثال alireza"
             type="text"
-            onChange={(e) => {
-              setUserName(e.target.value);
-            }}
+            {...register("username")}
+            aria-invalid={!!errors.username}
+            aria-describedby={errors.username ? "username-error" : undefined}
             className="text-right px-[20px] text-base h-[52px] w-full neutral-8 border border-neutral-300 rounded-[16px] focus:border-primary-500"
           />
+          {errors.username && (
+            <p id="username-error" className="mt-1 text-sm text-red-600">
+              {errors.username.message}
+            </p>
+          )}
         </div>
         <div className="pb-[28px] flex flex-col justify-center w-full">
           <label className="pb-[12px] flex items-center pr-2 text-neutral-400">
@@ -96,16 +138,21 @@ const Signup = () => {
           </label>
           <input
             placeholder="********"
-            type="text"
-            onChange={(e) => {
-              setPassword(e.target.value);
-            }}
+            type="password"
+            {...register("password")}
+            aria-invalid={!!errors.password}
+            aria-describedby={errors.password ? "password-error" : undefined}
             className="text-right px-[20px] text-base h-[52px] w-full neutral-8 border border-neutral-300 rounded-[16px] focus:border-primary-500"
           />
+          {errors.password && (
+            <p id="password-error" className="mt-1 text-sm text-red-600">
+              {errors.password.message}
+            </p>
+          )}
         </div>
         <div>
           <button
-            onClick={handelClick}
+            onClick={handleSubmit(handelClick)}
             className="h-[48px] relative w-full bg-primary-1000  hover:bg-primary-300 transition text-white border border-neutral-300 rounded-[16px]"
           >
             ثبت نام

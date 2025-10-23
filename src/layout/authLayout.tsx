@@ -1,8 +1,6 @@
 import "./login_sigin.css";
-
 import iconImg from "../assets/png/icon.png";
 import RahkoneshIcon from "../assets/svg/rahkonesh.svg";
-
 import "../assets/styles/styles.css";
 import "../assets/font/Estedad-Medium.ttf";
 
@@ -17,9 +15,7 @@ const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           <div className="grid w-full max-w-none m-auto lg:grid-cols-2 grid-cols-1 grid-rows-1 lg:gap-[48px] h-full min-w-fit min-h-full pt-[32px] pb-[82px] px-[24px]">
             <div className="col-span-1 w-full h-full rounded-3xl bg-gradient-to-b from-[#AEB7FA] via-[#C1D0FD] to-[#B2ACFD] d-3xl min-w-fit hidden lg:inline px-5">
               <div className="flex justify-center items-center  min-h-full">
-                {/* <div className=" items-center gap-2  mx-auto flex lg:flex-col justify-center  animate-bounce mt-7 "> 
-                        <img src={RahkoneshIcon} alt="svg icon"  className='md:w-70 lg:w-50'/> 
-                    </div>  */}
+
                 <img
                   src={iconImg}
                   alt="login_sign up image"
@@ -27,7 +23,6 @@ const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                 />
               </div>
             </div>
-            {/* layout */}
             {children}
           </div>
         </div>
