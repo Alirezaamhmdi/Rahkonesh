@@ -1,17 +1,20 @@
 @font-face {
   font-family: 'estedad-medium';
-  src: url('../font/Estedad-Medium.ttf') format('truetype');
+  src: url('../font/Estedad-FD-Medium.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
 }
 
 
 /* Apply to all elements */
 * {
-  font-family: 'estedad-medium', sans-serif !important;
-    font-variant-numeric: arabic-indic;
-  /* or for more specific control: */
-  font-variant-numeric: numeric;
+ font-family: "estedad-medium", sans-serif;
+  font-feature-settings: "lnum" 0, "onum" 0;
+  font-variant-numeric: normal;
 
 }
+
 @counter-style arabic-indic {
   system: numeric;
   symbols: "۰" "۱" "۲" "۳" "۴" "۵" "۶" "۷" "۸" "۹";

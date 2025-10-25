@@ -2,7 +2,6 @@ import "./login_sigin.css";
 import iconImg from "../assets/png/icon.png";
 import RahkoneshIcon from "../assets/svg/rahkonesh.svg";
 import "../assets/styles/styles.css";
-import "../assets/font/Estedad-Medium.ttf";
 
 const AuthLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (

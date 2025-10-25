@@ -2,7 +2,7 @@ import AuthLayout from "../layout/authLayout";
 import Cookies from "js-cookie";
 import axios from "axios";
 import { useState } from "react";
-
+import { ToastContainer, toast } from 'react-toastify';
 import { useForm } from "react-hook-form";
 import type { Resolver } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -41,11 +41,11 @@ const Signup: React.FC = () => {
         `http://185.221.237.102:1400/auth/register`,
         sendData
       );
-
-      console.log(response.data);
-      Cookies.set("auth.rahkonesh", response.data.accessToken, {
-        expires: 30,
-      });
+      toast.success("درخواست شما با موفقیت ارسال شد.")
+      // console.log(response.data);
+      // Cookies.set("auth.rahkonesh", response.data.accessToken, {
+      //   expires: 30,
+      // });
     } catch (err: any) {
       const message = err?.response?.data?.message || err?.message;
 

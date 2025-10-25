@@ -1,25 +1,21 @@
-import React, {useRef, useState, useEffect} from 'react';
-import {Outlet, useLocation} from 'react-router-dom';
-import { SearchNormal1, Headphone, Notification, DirectboxReceive, ArrowDown2, HamburgerMenu} from 'iconsax-reactjs';
-import ProfilePicture from '../components/profile';
-import SideBar from '../components/side_bar/sideBar'
-import '/src/assets/styles/colors.css';
-import './mainTable.css';
-import Massages from '../components/notify';
-import fullContext from './mainTableContext';
-import miniLogo from '/src/assets/svg/miniLogo.svg';
-import teamyer_typograph from '/src/assets/svg/teamyer_mini_type_graphy.svg';
-import avatar from '/src/assets/png/Avatar.png';
-import office from '/src/assets/png/homeOffice.png';
-import Header from '../components/header/header';
+import React, { useRef, useState, useEffect, lazy } from "react";
+import { Outlet, useLocation } from "react-router-dom";
+import SideBar from "../components/side_bar/sideBar";
+import "/src/assets/styles/colors.css";
+import "./mainTable.css";
+import fullContext from "./mainTableContext";
+import miniLogo from "/src/assets/svg/miniLogo.svg";
+import teamyer_mini from "/src/assets/svg/teamyer_mini_type_graphy.svg";
+
+import Header from "../components/header/header";
+
 
 interface User {
-  Version: string,
-  Name: string,
-  ImgURL: string,
-  jobs: string[],
+  Version: string;
+  Name: string;
+  ImgURL: string;
+  jobs: string[];
 }
-
 
 const Projects: React.FC = () => {
   const user = useRef<User>({
@@ -31,51 +27,59 @@ const Projects: React.FC = () => {
 
   const [fullPage, setFullPage] = useState(true);
   const location = useLocation();
-  useEffect(() => console.log(location, 'location'), [location]);
-
-  const Imglogo = useRef( document.createElement('img' ));
-  const tasksRef = useRef(document.createElement('div'));
+  // const FootBar = lazy(()=>import('../components/foot_bar/foot_bar.tsx'))
+  const Imglogo = useRef(document.createElement("img"));
+  const tasksRef = useRef(document.createElement("div"));
   const [openMenue, setOpenMenue] = useState(false);
+  const sidbarRef = useRef(document.createElement("div"));
+  const contentContainerRef = useRef(document.createElement("div"));
+  const motherRef = useRef(document.createElement("div"));
+  const divRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (divRef.current && !divRef.current.contains(event.target as Node)) {
+        setOpenMenue(false)
+      }
+    };
 
+    document.addEventListener("mousedown", handleClickOutside);
 
-  // useEffect(() => {
-  //   if (Imglogo.current){
-  //   teamyer_mini.current.src = teamyer_typograph;
-  //   Imglogo.current.src = miniLogo;
-  //   Avatar.current.src = avatar;
-    // HomeOffice.current.src = office ;}
-  // }, []);
-
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   return (
-    <div className='box-border w-screen h-screen md:px-10 flex justify-center overflow-hidden'>
-      <div className='lg:min-w-300 relative items-center flex justify-center w-full sm:w-auto lg:max-w-[1214px] lg:mx-auto  px-5 lg:py-8 transition-all duration-500 h-full mx-auto' style={{width:"100%"}} dir='rtl' ref={tasksRef}>
-        <div className={`absolute  z-[9999] transition-all overflow-hidden   shadow-right-box ease-in h-full right-5 md:hidden ${openMenue ? 'w-71' : 'w-0'}`} style={{
-          left: tasksRef.current.style.left + tasksRef.current.style.width
-        }}>
-          <SideBar  user={user} shrink={openMenue} setShrink={setOpenMenue}/>
-        </div>
+    <div ref={motherRef} className="bg-neutral-100 relative w-screen h-screen py-[20px] lg:py-[25px] px-4 flex transitoin-all justify-center overflow-y-scroll snap-y snap-mandatory gap-6"
+      dir="rtl">
+      <div ref={divRef} className={`z-20 fixed w-max transition-all rounded-2xl  shadow-right-box duration-[300ms] h-full ${openMenue ? 'right-0' : '-right-[17.5rem]'} `}>
+        <SideBar fixed={true} user={user} shrink={true} setShrink={setOpenMenue} />
+      </div>
 
-        <div className='flex w-full h-full gap-6' dir={'rtl'}>
-          <div className={`transition-all duration-300 ease-in-out md:max-w-22 lg:max-w-full   ${fullPage ? "lg:w-1/4" : "lg:w-1/12"} hidden md:block`}>
-          <SideBar  user={user} shrink={fullPage} setShrink={setFullPage}/>
-          </div>
-
-          <div className={`lg:mx-0 ${fullPage ? "md:w-3/4" : "md:w-11/12"} h-full flex flex-col gap-6 `}>
-          <Header Imglogo={Imglogo} teamyer_mini={teamyer_typograph} shrink={openMenue} setShrink={setOpenMenue} />
-           
-            <div className='rounded-2xl bg-white py-3 shadow-right-box flex-1 overflow-hidden'>
-              <div className='rounded-2xl bg-white overflow-auto h-full relative
-                [&::-webkit-scrollbar]:w-2
-                [&::-webkit-scrollbar-track]:rounded-full
-                [&::-webkit-scrollbar-track]:bg-gray-0
-                [&::-webkit-scrollbar-thumb]:rounded-full
-                [&::-webkit-scrollbar-thumb]:bg-gray-300'>
-                <fullContext.Provider value={fullPage}>
-                  <Outlet/>
-                </fullContext.Provider>
-              </div>
-            </div>
+      <div
+        ref={sidbarRef}
+        className={`transition-all z-80 duration-300 ease-in-out flex-none  lg:h-full sticky top-0 h-full  ${fullPage ? "min-w-[278px]" : "min-w-[5.5rem]"
+          } hidden md:block`}
+      >
+        <SideBar fixed={false} user={user} shrink={fullPage} setShrink={setFullPage} />
+      </div>
+      <div
+        className={`lg:mx-auto z-[10] grow gap-6 flex-1 transition-all w-0 h-full flex flex-col relative `}
+        ref={contentContainerRef}
+      >
+        <Header
+          Imglogo={Imglogo}
+          teamyer_mini={teamyer_mini}
+          shrink={openMenue}
+          setShrink={setOpenMenue}
+        />
+        <div className="rounded-2xl bg-white py-3 shadow-right-box flex-1 overflow-hidden z-[999]">
+          <div
+            className="bg-white overflow-auto h-full relative snap-y snap"
+          >
+            <fullContext.Provider value={fullPage}>
+              <Outlet />
+            </fullContext.Provider>
           </div>
         </div>
       </div>

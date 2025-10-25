@@ -1,102 +1,251 @@
+import Cloud from "../../assets/icons/subscription plan.svg?react";
+import Activity from "../../assets/icons/Iconex/Light/Chart 1.svg?react";
+import Message2 from "../../assets/icons/Iconex/Light/Message square.svg?react";
+import Element4 from "../../assets/icons/Iconex/Light/Category.svg?react";
+import Briefcase from "../../assets/icons/Iconex/Light/Case.svg?react";
+import Folder2 from "../../assets/icons/Iconex/Light/Folder.svg?react";
+import People from "../../assets/icons/Iconex/Light/Users.svg?react";
+import Chevron from "../../assets/icons/Icon/Solid/chevron-left.svg?react";
 
-import {ArrowRight2, Element4, Folder2, Cloud, People, Message2, Briefcase, Activity} from 'iconsax-reactjs';
-import React, { useContext, useEffect, useLayoutEffect, useRef, type SetStateAction} from 'react';
-import { Link} from 'react-router-dom';
-import logo_context from '../../context/page-logo.tsx';
+import React, {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  type SetStateAction,
+} from "react";
+import { Link, useNavigate } from "react-router-dom";
+import logo_context from "../../context/page-logo.tsx";
+import { motion, AnimatePresence } from "framer-motion";
 // import Minipicture from '../../components/picture/minipicture'
 interface User {
-  Version: string,
-  Name: string,
-  ImgURL: string,
-  jobs: string[],
+  Version: string;
+  Name: string;
+  ImgURL: string;
+  jobs: string[];
 }
+const SideBar: React.FC<{
+  fixed: boolean,
+  user: React.RefObject<User>;
+  shrink: boolean;
+  setShrink: React.Dispatch<SetStateAction<boolean>>;
+}> = ({ fixed, user, shrink, setShrink }) => {
+  const { Imglogo, teamyer_mini, Avatar, HomeOffice } =
+    useContext(logo_context);
+  const nav = useNavigate();
+  const handleClick = () => {
+    fixed ? setShrink(false) : null;
+  }
+  // const logo = useRef<HTMLImageElement | null > (null )
+  return (
+    <motion.div
+      animate={{
+        width: shrink ? "17.375rem" : "5.5rem",
+      }}
+      transition={{
+        duration: 0.2,
+        ease: "easeInOut",
+      }}
+      className="bg-white overflow-y-auto scrollbar-custom z-5 text-neutral-600 rounded-2xl select-none pt-5 pb-3 w-full max-w-[278px]  min-w-22 transforming-all shadow-right-box h-full flex flex-col"
+    >
+      <div className="min-h-full flex flex-col">
+        {!fixed && <div
+          className="bg-white -right-3 p-[4px] z-[2] rounded-full flex justify-center items-center absolute mt-[0.25rem] border border-border cursor-pointer flex bg-white "
+          onClick={() => setShrink(!shrink)}
+        >
+          <Chevron
+            className={`fill-neutral-1000  mx-auto  size-[16px] duration-200 ${!shrink ? "rotate-180" : ""
+              }`}
+          />
+        </div>}
 
-const SideBar: React.FC<{ user: React.RefObject<User>, shrink: boolean, setShrink: React.Dispatch<SetStateAction<boolean>>}> = (({ user, shrink, setShrink}) => {
-    const {Imglogo ,teamyer_mini ,Avatar , HomeOffice} = useContext(logo_context)
-    // const logo = useRef<HTMLImageElement | null > (null )
-    useEffect(()=>{
-        console.log(  Imglogo , "logo loaded ")
-        
-    } , [Imglogo])
-    return (
-    <div className='bg-white rounded-2xl pt-5 pb-3 w-full transition-all  min-w-22 transforming-grid shadow-right-box h-full flex flex-col 	'>
-      <Link to={".."}>
-        <div className={`${shrink ? "lg:pr-6 pr-6 md:pr-0 md:gap-0 gap-2 lg:gap-2" : "px-0 gap-0 flex justify-center"} bg-white  w-full mb-5 flex`}>
-          <img  src={Imglogo} className={`size-[32px]  ${!shrink ? "mx-0 lg:mx-0 md:mx-auto" : "lg:mx-0 mx-0 md:mx-auto"}`}/>
+        <div className="max-h-full w-full ">
+          <div className="bg-white sticky z-1 top-0">
+            <Link to={".."}>
+              <div
+                className={`${shrink ? "pr-6  gap-2 lg:gap-2" : "px-0 gap-0 flex justify-center"
+                  } bg-white  w-full flex overflow-x-hidden`}
+              >
+                <img
+                  src={Imglogo}
+                  className={`size-[32px] flex-none ${!shrink ? "mx-0 " : "mx-0 "}`}
+                />
+                <AnimatePresence>
+                  {shrink && (
+                    <motion.div
+                      key="fade-only"
+                      initial={{ opacity: 0 }}
+                      animate={{
+                        opacity: 1,
+                        transition: { duration: 0.5, ease: "easeOut" },
+                      }}
+                      exit={{
+                        opacity: 0,
+                        transition: { duration: 0, ease: "easeIn" },
+                      }}
+                      className="overflow-hidden"
+                    >
+                      <img src={teamyer_mini} className="w-[7.5rem]" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
 
+              </div>
+            </Link>
 
-          <img src={teamyer_mini} className={!shrink ? 'md:hidden' : 'block lg:block md:hidden w-[7.5rem]'}/>
+            <hr className="border-t-2 border-neutral-100 mt-[30px]" />
+            <div
+              className={`cusor-pointer flex my-auto  h-[3rem] relative items-center w-full mb-[20px] ${!shrink
+                ? "gap-3 px-0"
+                : " lg:gap-3 lg:pl-3  lg:pr-6 gap-3 pl-3 pr-6 "
+                } mt-3`}
+            >
+              <Chevron
+                className={`fill-neutral-1000 size-[20px] rotate-180 ${!shrink ? "hidden" : "block"
+                  }`}
+              />
+              <img
+                src={Avatar}
+                className={`${!shrink
+                  ? "size-[2.25rem] mx-auto shrink-1"
+                  : "size-[2.5rem] mx-0 "
+                  }  transition-all duration-800 rounded-full`}
+              />
+              <div
+                dir="rtl"
+                className={`overflow-hidden pl-1 ${!shrink ? "hidden" : "block"
+                  }`}
+              >
+                <span className="text-neutral-500 text-base block w-full  whitespace-nowrap line-clamp-1 text-bold">
+                  خوش آمدید 👋
+                </span>
+                <span className="text-xs whitespace-nowrap  text-neutral-1000">{user.current.Name}</span>
+              </div>
+            </div>
+          </div>
+          <ol className={`w-full text-neutral-600 text-base mt-1 hover-primary-inner-text mb-2 flex-1 flex-col flex gap-[0.25rem] ${shrink ? "px-6" : "px-[22px]"}`}>
+            <li
+              className={`flex gap-3 text-sm items-center w-full hover:bg-primary-100 transition rounded-full h-[2.75rem] ${!shrink
+                ? "px-0 py-0 size-[2.75rem]"
+                : "px-3 md:pr-[12px] py-3"
+                } ${location.pathname.split("/")[2] == "counter"
+                  ? "bg-primary-100 text-primary-1000"
+                  : "hover:bg-primary-100"
+                }   cursor-pointer`}
+            >
+              <Element4
+                className={`size-[20px] fill-neutral-600 ${!shrink ? "mx-auto" : "mx-0 "
+                  }`}
+              />
+              <span
+                className={`${!shrink ? "hidden" : "block   whitespace-nowrap"}`}
+              >
+                پیشخوان
+              </span>
+            </li>
+            <li>
+              <Link
+                to="/panel/area" onClick={handleClick}
+                className={`flex gap-3 text-sm items-center w-full  hover:bg-primary-100 transition rounded-full h-[2.75rem]    ${!shrink
+                  ? "px-0 py-0 size-[2.75rem] "
+                  : "px-3 md:pr-[12px] py-3"
+                  }   cursor-pointer ${location.pathname.split("/")[2] == "area"
+                    ? "bg-primary-100 text-primary-1000"
+                    : "hover:bg-primary-100"
+                  }`}
+              >
+                <Folder2
+                  className={`size-[20px] ${location.pathname.split("/")[2] == "area" ? "fill-primary-1000" : "fill-neutral-600"} ${!shrink ? "mx-auto" : "mx-0 "
+                    }`}
+                />
+                <span
+                  className={`${!shrink ? "hidden" : " block  whitespace-nowrap"
+                    }`}
+                >
+                  حوزه ها
+                </span>
+              </Link>
+            </li>
+            <li
+              className={`cursor-pointer flex gap-3 text-sm items-center w-full  hover:bg-primary-100 transition rounded-full h-[2.75rem]  ${!shrink
+                ? "px-0 py-0 size-[2.75rem] "
+                : "px-3 md:pr-[12px] py-3"
+                }   ${location.pathname.split("/")[2] == "projects" ||
+                  location.pathname.split("/")[1] == "project"
+                  ? "bg-primary-100 text-primary-1000"
+                  : "hover:bg-primary-100"
+                } `}
+              onClick={() => {
+                nav("/panel/");
+                handleClick;
+              }}
+            >
+              <Briefcase
+                className={`size-[20px] ${location.pathname.split("/")[2] == "projects" ||
+                  location.pathname.split("/")[1] == "project" ? "fill-primary-1000" : "fill-neutral-600"} ${!shrink ? "mx-auto" : "mx-0"
+                  }`}
+              />
+              <span
+                className={`${!shrink ? "hidden" : " block   whitespace-nowrap"}`}
+              >
+                پروژه‌ها
+              </span>
+            </li>
+            <li>
+              <Link
+                to="/panel/users/list" onClick={handleClick}
+                className={`flex gap-3 text-sm items-center w-full  hover:bg-primary-100 transition rounded-full h-[2.75rem]    ${!shrink
+                  ? "px-0 py-0 size-[2.75rem] "
+                  : "px-3 md:pr-[12px] py-3"
+                  }   cursor-pointer ${location.pathname.split("/")[2] == "users"
+                    ? "bg-primary-100 text-primary-1000"
+                    : "hover:bg-primary-100"
+                  }`}
+              >
+                <People
+                  className={`size-[20px] ${location.pathname.split("/")[2] == "users" ? "fill-primary-1000" : "fill-neutral-600"} ${!shrink ? "mx-auto" : "mx-0 "
+                    }`}
+                />
+                <span
+                  className={`${!shrink ? "hidden" : " block  whitespace-nowrap"
+                    }`}
+                >
+                  کاربران
+                </span>
+              </Link>
+            </li>
+          </ol>
+          <hr className="border-t-2 border-border my-[24px]" />
+          <ol className={`"w-full mt-1 hover-primary-inner-text mb-2 flex-1 flex-col flex gap-[0.25rem]" ${shrink ? "px-6" : "px-[22px]"}`}>
+            <li>
+              <Link
+                to="/panel/subscription" onClick={handleClick}
+                className={`flex gap-3 text-sm items-center w-full  hover:bg-primary-100 transition rounded-full h-[2.75rem]    ${!shrink
+                  ? "px-0 py-0 size-[2.75rem] "
+                  : "px-3 md:pr-[12px] py-3"
+                  }   cursor-pointer ${location.pathname.split("/")[2] == "subscription"
+                    ? "bg-primary-100 text-primary-1000"
+                    : "hover:bg-primary-100"
+                  }`}
+              >
+                <Activity
+                  className={`size-[20px] ${location.pathname.split("/")[2] == "subscription" ? "fill-primary-1000" : "fill-neutral-600"} ${!shrink ? "mx-auto" : "mx-0 "
+                    }`}
+                />
+                <span
+                  className={`${!shrink ? "hidden" : " block  whitespace-nowrap"
+                    }`}
+                >
+                  گزارشات
+                </span>
+              </Link>
+            </li>
+
+          </ol>
         </div>
-      </Link>
 
-      
-      <hr className='border-t-2 border-neutral-100'/>
-      <div className={`flex  relative items-center w-full ${!shrink ? "gap-3 pl-3 pr-6 md:gap-0 md:pl-0 md:pr-0" : "md:gap-0 md:pl-0 md:pr-0 lg:gap-3 lg:pl-3  lg:pr-6 gap-3 pl-3 pr-6 "} mt-3`}>
-        <ArrowRight2 size="10" color="#081021" variant="Bold" className={`cursor-pointer  md:hidden lg:block cursor-pointer absolute transition-all right-1 md:-right-[0.375rem] bg-white outline outline-[0.375rem] outline-white size-[0.75rem]  rounded-full  duration-500 ${!shrink ? 'rotate-180  ' : ''}`} onClick={() => setShrink(!shrink)}/>
-        <img src={Avatar} className={` ${!shrink ? "size-[2.25rem] mx-auto shrink-1" : "size-[2.25rem] md:size-[2.25rem] mx-0 md:mx-auto lg:size-[2.25rem]   lg:mx-0"}  transition-all duration-800`}/>
-        <div dir='rtl' className={`text-sm pl-1 ${!shrink ? "hidden" : "md:hidden block lg:block"}`}>
-          <span className='text-neutral-400 text-xl block'>
-            خوش آمدید 👋
-          </span>
-          {user.current.Name}
-        </div>
       </div>
-      <ol className='w-full px-6 mt-1 hover-primary-inner-text mb-2 flex-1 flex-col flex gap-[0.25rem]'>
-        <li className={`flex gap-2 text-sm items-center w-full hover-inner hover:bg-purple-100 transition rounded-full h-[2.75rem]     ${!shrink ? 'px-0 py-0 size-[2.75rem] ' : 'px-3 md:px-0 lg:px-3 py-3' } ${location.pathname.split('/')[2] == 'counter' ? "bg-purple-100" : "hover:bg-purple-100"}   cursor-pointer`}>
-          <Element4 size="16" variant="TwoTone" className={!shrink ? 'mx-auto' : 'mx-0 md:mx-auto lg:mx-0'}/>
-          <span className={`${!shrink ? "hidden" : "md:hidden block lg:block"}`}>
-            پیشخوان
-          </span>
-        </li>
-        <li className={`flex gap-2 text-sm items-center w-full hover-inner hover:bg-purple-100 transition rounded-full h-[2.75rem]    ${!shrink ? 'px-0 py-0 size-[2.75rem] ' : 'px-3 md:px-0 lg:px-3 py-3' }   cursor-pointer ${location.pathname.split('/')[2] == 'workspace' ? "bg-purple-100" : "hover:bg-purple-100"}`}>
-          <Folder2 size="16" variant="TwoTone" className={!shrink ? 'mx-auto' : 'mx-0 md:mx-auto lg:mx-0'}/>
-          <span className={`${!shrink ? "hidden" : "md:hidden block lg:block"}`}>
-            فضای کاری
-          </span>
-        </li>
-        <li className={` flex gap-2 text-sm items-center w-full hover-inner hover:bg-purple-100 transition rounded-full h-[2.75rem]  ${!shrink ? 'px-0 py-0 size-[2.75rem] ' : 'px-3 md:px-0 lg:px-3 py-3' }   ${location.pathname.split('/')[2] == 'projects' || location.pathname.split('/')[1] == 'project' ? "bg-purple-100" : "hover:bg-purple-100"} `}>
-          <Briefcase size="16" variant="TwoTone" className={!shrink ? 'mx-auto ' : 'mx-0 md:mx-auto lg:mx-0'}/>
-          <span className={`${!shrink ? "hidden" : "md:hidden block lg:block"}`}>
-            پروژه‌ها
-          </span>
-        </li>
-        <li className={`flex gap-2 text-sm items-center w-full hover-inner hover:bg-purple-100 transition rounded-full  ${location.pathname.split('/')[2] == 'users' ? "bg-purple-100" : "hover:bg-purple-100"}   ${!shrink ? 'px-0 py-0 size-[2.75rem] ' : 'px-3 md:px-0 lg:px-3 py-3' }   cursor-pointer`}>
-          <People size="16" variant="TwoTone" className={!shrink ? 'mx-auto' : 'mx-0 md:mx-auto lg:mx-0'}/>
-          <span className={`${!shrink ? "hidden" : "md:hidden block lg:block"}`}>
-            کاربران
-          </span>
-        </li>
-      </ol>
-      <hr className='border-t-2 border-neutral-100 my-auto mb-auto'/>
-      <ol className='w-full px-6 mt-1 hover-primary-inner-text mb-2 flex-1 flex-col flex gap-[0.25rem]'>
-        <li className={`flex gap-2 text-sm items-center w-full hover-inner hover:bg-purple-100 transition rounded-full   h-[2.75rem]     ${!shrink ? 'px-0 py-0 size-[2.75rem] ' : 'px-3 md:px-0 lg:px-3 py-3' }    cursor-pointer`}>
-          <Activity size="16" variant="TwoTone"  className={!shrink ? 'mx-auto' : 'mx-0 md:mx-auto lg:mx-0'} />
-          <span className={`${!shrink ? "hidden" : "md:hidden block lg:block"}`}>
-            گزارشات
-          </span>
-        </li>
-        <li className={`flex gap-2 text-sm items-center w-full hover-inner hover:bg-purple-100 transition rounded-full h-[2.75rem]  ${!shrink ? 'px-0 py-0 size-[2.75rem] ' : 'px-3 md:px-0 lg:px-3 py-3' }   cursor-pointer`}>
-          <Message2 size="16" variant="TwoTone" className={!shrink ? 'mx-auto' : 'mx-0 md:mx-auto lg:mx-0'}/>
-          <span className={`${!shrink ? "hidden" : "md:hidden block lg:block"}`}>
-            تیکت ها
-          </span>
-        </li>
-        <li className={`flex gap-2 text-sm items-center w-full hover-inner hover:bg-purple-100 transition rounded-full h-[2.75rem]     ${!shrink ? 'px-0 py-0 size-[2.75rem] ' : 'px-3 md:px-0 lg:px-3 py-3' }   cursor-pointer`}>
-          <Cloud size="16" variant="TwoTone" className={!shrink ? 'mx-auto' : 'mx-0 md:mx-auto lg:mx-0'}/>
-          <span className={`${!shrink ? "hidden" : "md:hidden block lg:block"}`}>
-            اشتراک ها
-          </span>
-        </li>
-      </ol>
-      <div className={!shrink ? "hidden" : 'w-full px-6 text-xs mt-5 md:hidden block lg:block'}>
-        <img src={HomeOffice} className='mx-auto'/>
-        <button className='bg-[#B656E4] hover:opacity-60 transition cursor-pointer text-white rounded-full w-full h-[2.75rem]  text-sm'>
-          ارتقا سطح
-        </button>
-      </div>
-      <div className={"transition-all duration-300 "+!shrink? " h-full ": ' md:h-full h-0 '}> 
-        </div> 
-    </div>
+    </motion.div>
   );
-});
-export default SideBar
+};
+export default SideBar;
