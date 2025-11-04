@@ -14,12 +14,7 @@ const instance = axios.create({
   }
 });
 
-// axiosRetry(instance, {
-//   retries: 10, 
-//   retryDelay: axiosRetry.exponentialDelay,
-//   retryCondition:(error)=>{return error.code === 'ENOTFOUND' | error.code === 'ERR_NETWORK' || error.code === 'ECONNABORTED';},
-//   // onRetry:(retryCount, error, requestConfig)=>{console.log("retryCount",retryCount); }
-// });
+
 
 instance.interceptors.request.use(function (config) {
   return config;

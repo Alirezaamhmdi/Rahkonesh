@@ -24,6 +24,10 @@ import EditArea from "./components/area/editArea.tsx";
 import { UserProvider } from "./context/userContext.tsx";
 import { AreaProvider } from "./context/areaContext.tsx";
 import { ToastContainer } from "react-toastify";
+import Programs from "./pages/programs.tsx";
+import AddProgram from "./components/programs/123.tsx";
+import AddPro from "./components/programs/addPro.tsx";
+import { ProgramProvider } from "./context/programContext.tsx";
 const Footer = lazy(() => import('./components/foot_bar/foot_bar.tsx'))
 
 const App: React.FC = () => {
@@ -36,43 +40,48 @@ const App: React.FC = () => {
     <div className="App">
       {isLargeScreen && <Footer />}
       <AreaProvider>
-        <UserProvider>
-          <Provider store={Store}>
-            <logos.Provider
-              value={{
-                Imglogo: miniLogo,
-                teamyer_mini: teamyer_typograph,
-                Avatar: avatar,
-                HomeOffice: office,
-              }}
-            >
-              <Routes location={background || location}>
+        <ProgramProvider>
+          <UserProvider>
+            <Provider store={Store}>
+              <logos.Provider
+                value={{
+                  Imglogo: miniLogo,
+                  teamyer_mini: teamyer_typograph,
+                  Avatar: avatar,
+                  HomeOffice: office,
+                }}
+              >
+                <Routes location={background || location}>
 
-                <Route path="panel" element={<Projects />}>
-                  <Route path='users' element={<Users />}>
+                  <Route path="panel" element={<Projects />}>
+                    <Route path='users' element={<Users />}>
 //             <Route path='list' index element={<UsersList />}></Route>
 //             <Route path='invite' index element={<InviteList />}></Route>
 //           </Route>
 //           <Route path='area' element={<Workspaces />} />
-                </Route>
+//           <Route path='programs' element={<Programs />} />
+                  </Route>
 
-                <Route path="register" element={<Signup />} />
-                <Route path="login" element={<Login />} />
-              </Routes>
-              {background && (
-                <Routes>
-                  <Route path="add-user" element={<Invite />} />
-                  <Route path="edit-user/:id" element={<EditUser />} />
-                  <Route path="add-area" element={<AddArea />} />
-                  <Route path="edit-area/:id" element={<EditArea />} />
-                  <Route path="invite-member/:id" element={<InviteMember />} />
-                  <Route path="profile/:id" element={<UserProfile />} />
+                  <Route path="register" element={<Signup />} />
+                  <Route path="login" element={<Login />} />
+
                 </Routes>
-              )}
-            </logos.Provider>
-          </Provider>
-          <ToastContainer />
-        </UserProvider>
+                {background && (
+                  <Routes>
+                    <Route path="add-user" element={<Invite />} />
+                    <Route path="edit-user/:id" element={<EditUser />} />
+                    <Route path="add-area" element={<AddArea />} />
+                    <Route path="add-program" element={<AddPro />} />
+                    <Route path="edit-area/:id" element={<EditArea />} />
+                    <Route path="invite-member/:id" element={<InviteMember />} />
+                    <Route path="profile/:id" element={<UserProfile />} />
+                  </Routes>
+                )}
+              </logos.Provider>
+            </Provider>
+            <ToastContainer />
+          </UserProvider>
+        </ProgramProvider>
       </AreaProvider>
     </div>
   );
