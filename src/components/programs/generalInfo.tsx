@@ -1,20 +1,25 @@
 import { useRef, useState } from "react";
+import Close from "../../assets/icons/iconixto/linear/close.svg?react";
 import InputStructure from "../inputStructure";
 import instance from "../../server/instance";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { UserValidator, type UserFormData } from "../../validator/userValidator";
 import { useNavigate } from "react-router-dom";
 import UserSelect from "../select/userSelect";
-import { ProgramValidator, type ProgramFormData } from "../../validator/programValidator";
+import { ProgramValidator, type ProgramFormData } from "../../validator/programvalidator.tsx";
+
+import { useAreas } from "../../context/areaContext";
 import UpstreamSelect from "./UpstreamSelect";
+
 import CheckboxList from "../checkbox/checkboxList";
 import type { CheckboxListItems } from "../checkbox/checkboxList";
-import { usePrograms } from "../../context/programContext"; // <-- new
 
 const GeneralInfo: React.FC = () => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
+
   const navigate = useNavigate();
-  const { addProgram } = usePrograms(); // <-- usePrograms instead of useAreas
+  const { addArea } = useAreas();
 
   const inputsRef = useRef<HTMLInputElement[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -25,7 +30,9 @@ const GeneralInfo: React.FC = () => {
     setValue,
     getValues,
     watch,
-    formState: { errors },
+
+    formState: { errors }
+
   } = useForm<ProgramFormData>({
     resolver: yupResolver(ProgramValidator),
   });
@@ -42,54 +49,48 @@ const GeneralInfo: React.FC = () => {
       const selectedBoard = boardMembers.filter(b => b.status).map(b => b.key);
       const payload = {
         ...formValues,
-        boardMembers: selectedBoard,
+        boardMembers: selectedBoard, // backend باید این فیلد رو قبول کنه یا نام مناسب رو قرار بده
       };
 
-      // <-- changed endpoint to program API
-      const response = await instance.post(`/program/create`, payload);
-
-      // call program context addProgram
-      addProgram(response.data);
-
-      navigate(-1);
+      const response = await instance.post(
+        `/area/create`,
+        payload
+      );
+      addArea(response.data)
+      navigate(-1)
     } catch (err: any) {
-      console.log("create program error:", err);
+      console.log(err);
     } finally {
       setLoading(false);
     }
-  }
 
+  }
   return (
+
     <div>
+
       <div className="flex max-md:flex-col flex-wrap gap-y-[22px]">
+
         <div className="pt-[20px] w-1/2 max-md:w-full px-[8px]">
           <label className="text-neutral-600 text-xs mb-[16px] inline-block">عنوان برنامه</label>
-          <InputStructure
-            className="px-[20px] text-xs border border-neutral-300 rounded-[12px] h-[2.75rem] w-full focus-visible:border-primary-1000 transition"
-            register={register}
-            name={"name"}
-            type={"text"}
-            placeholder={"عنوان مثال"}
-            Ref={inputsRef}
-            index={1}
-            errors={errors}
-            onSubmit={handleSubmit(handleClick)}
-          />
+          <InputStructure className="px-[20px] text-xs border border-neutral-300 rounded-[12px] h-[2.75rem] w-full focus-visible:border-primary-1000 transition"
+            register={register} name={"name"} type={"text"} placeholder={"عنوان مثال"} Ref={inputsRef} index={1} errors={errors} onSubmit={handleSubmit(handleClick)} />
         </div>
-
-        <UpstreamSelect
-          name="parent"
-          label="حوزه بالا دستی"
-          options={[
-            { label: "گروه مالی", value: "hoze1" },
-            { label: "حوزه 2", value: "hoze2" },
-          ]}
-          register={register}
-          setValue={setValue}
-          watch={watch}
-          errors={errors}
-          placeholder="حوزه را انتخاب کنید"
-        />
+        <>
+          <UpstreamSelect
+            name="parent"
+            label="حوزه بالا دستی"
+            options={[
+              { label: "گروه مالی", value: "hoze1" },
+              { label: "حوزه 2", value: "hoze2" },
+            ]}
+            register={register}
+            setValue={setValue}
+            watch={watch}
+            errors={errors}
+            placeholder="حوزه را انتخاب کنید"
+          />
+        </>
 
         <div className="pt-[20px] w-1/2 max-md:w-full px-[8px]">
           <label className="text-neutral-600 text-xs mb-[16px] inline-block">مدیر برنامه</label>
@@ -106,27 +107,27 @@ const GeneralInfo: React.FC = () => {
           <UserSelect getValues={getValues} setValue={setValue} errors={errors} />
         </div>
 
+
         <div className="pt-[20px] w-1/2 max-md:w-full px-[8px]">
           <label className="text-neutral-600 text-xs mb-[16px] inline-block">اعضای ثابت شورای راهبری</label>
           <CheckboxList Items={boardMembers} SetItems={setBoardMembers} />
         </div>
+
       </div>
 
       <div className="flex justify-content-between gap-[48px] pt-[1rem]">
-        <button
-          onClick={handleSubmit(handleClick)}
-          disabled={loading}
-          className="p-[12px] relative hover:opacity-70 transition bg-primary-1000 text-white text-sm rounded-[12px] border border-primary-1000 flex-1"
-        >
-          افزون برنامه
-          {loading && <div className="loader w-[30px] border-[4px] border-primary-500 absolute top-[8px] left-[10px]"></div>}
+        <button onClick={handleSubmit(handleClick)} disabled={loading} className="p-[12px] relative hover:opacity-70 transition bg-primary-1000 text-white text-sm rounded-[12px] border border-primary-1000 flex-1">افزودن اعضا
+          {loading && (
+            <div className="loader w-[30px] border-[4px] border-primary-500 absolute top-[8px] left-[10px]"></div>
+          )}
         </button>
-        <button onClick={() => navigate(-1)} className="p-[12px] hover:opacity-70 transition text-neutral-500 text-sm rounded-[12px] border border-neutral-500 flex-1">
-          انصراف
-        </button>
+        <button onClick={() => navigate(-1)} className="p-[12px] hover:opacity-70 transition text-neutral-500 text-sm rounded-[12px] border border-neutral-500 flex-1">انصراف</button>
       </div>
     </div>
+
+
   );
-};
+}
+
 
 export default GeneralInfo;

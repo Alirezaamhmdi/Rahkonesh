@@ -4,20 +4,30 @@ import InputStructure from "../inputStructure";
 import instance from "../../server/instance";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useNavigate } from "react-router-dom";
 import { AreaValidator, type AreaFormData } from "../../validator/areaValidator";
-import { usePrograms } from "../../context/programContext"; // <-- new
+import { useNavigate } from "react-router-dom";
+import { useAreas } from "../../context/areaContext";
 
 const Strategies: React.FC = () => {
   const navigate = useNavigate();
-  const { addProgram } = usePrograms(); // <-- usePrograms
+  const { addArea } = useAreas();
+
   const inputsRef = useRef<HTMLInputElement[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const [strategies, setStrategies] = useState<string[]>(["راهبرد 1", "راهبرد 2"]);
+  const [strategies, setStrategies] = useState<string[]>([
+    "راهبرد 1",
+    "راهبرد 2",
+  ]);
+
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
 
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm<AreaFormData>({
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<AreaFormData>({
     resolver: yupResolver(AreaValidator),
   });
 
@@ -49,14 +59,24 @@ const Strategies: React.FC = () => {
       const el = inputsRef.current[pos];
       const currentVal = el ? el.value.trim() : strategies[editingIndex];
       if (currentVal === "") {
-        setStrategies(prev => prev.filter((_, i) => i !== editingIndex));
-        inputsRef.current = inputsRef.current.filter((_, i) => i !== pos);
+        setStrategies((prev) => {
+          const next = prev.filter((_, i) => i !== editingIndex);
+          try {
+            next.forEach((s, i) => setValue(`strategies.${i}` as any, s));
+          } catch { }
+          return next;
+        });
+        inputsRef.current = inputsRef.current.filter(
+          (_, i) => i !== pos
+        );
         setEditingIndex(null);
       } else {
-        setStrategies(prev => {
+        setStrategies((prev) => {
           const copy = [...prev];
           copy[editingIndex] = currentVal;
-          copy.forEach((s, i) => setValue(`strategies.${i}` as any, s));
+          try {
+            copy.forEach((s, i) => setValue(`strategies.${i}` as any, s));
+          } catch { }
           return copy;
         });
         setEditingIndex(null);
@@ -64,22 +84,26 @@ const Strategies: React.FC = () => {
     }
 
     const newIndex = strategies.length;
-    setStrategies(prev => {
+    setStrategies((prev) => {
       const next = [...prev, ""];
-      try { setValue(`strategies.${next.length - 1}` as any, ""); } catch { }
+      try {
+        setValue(`strategies.${next.length - 1}` as any, "");
+      } catch { }
       return next;
     });
     setEditingIndex(newIndex);
   };
 
   const removeStrategy = (index: number) => {
-    setStrategies(prev => {
+    setStrategies((prev) => {
       const next = prev.filter((_, i) => i !== index);
-      try { next.forEach((s, i) => setValue(`strategies.${i}` as any, s)); } catch { }
+      try {
+        next.forEach((s, i) => setValue(`strategies.${i}` as any, s));
+      } catch { }
       return next;
     });
 
-    setEditingIndex(prev => {
+    setEditingIndex((prev) => {
       if (prev === null) return null;
       if (prev === index) return null;
       if (prev > index) return prev - 1;
@@ -97,18 +121,22 @@ const Strategies: React.FC = () => {
       const el = inputsRef.current[pos];
       const newVal = el ? el.value.trim() : strategies[editingIndex];
       if (newVal === "") {
-        setStrategies(prev => prev.filter((_, i) => i !== editingIndex));
+        setStrategies((prev) => prev.filter((_, i) => i !== editingIndex));
         inputsRef.current = inputsRef.current.filter((_, i) => i !== pos);
         try {
           setTimeout(() => {
-            strategies.filter((_, i) => i !== editingIndex).forEach((s, i) => setValue(`strategies.${i}` as any, s));
+            strategies
+              .filter((_, i) => i !== editingIndex)
+              .forEach((s, i) => setValue(`strategies.${i}` as any, s));
           }, 0);
         } catch { }
       } else {
-        setStrategies(prev => {
+        setStrategies((prev) => {
           const copy = [...prev];
           copy[editingIndex] = newVal;
-          try { copy.forEach((s, i) => setValue(`strategies.${i}` as any, s)); } catch { }
+          try {
+            copy.forEach((s, i) => setValue(`strategies.${i}` as any, s));
+          } catch { }
           return copy;
         });
       }
@@ -125,12 +153,11 @@ const Strategies: React.FC = () => {
         strategies,
       };
 
-      // change endpoint to program
-      const response = await instance.post(`/program/create`, payload);
-      addProgram(response.data);
+      const response = await instance.post(`/area/create`, payload);
+      addArea(response.data);
       navigate(-1);
     } catch (err: any) {
-      console.log("create program error:", err);
+      console.log(err);
     } finally {
       setLoading(false);
     }
@@ -150,7 +177,10 @@ const Strategies: React.FC = () => {
             strategies.map((val, idx) => {
               const inputIndex = getInputIndexForStrategy(idx);
               return (
-                <div key={idx} className="flex items-center justify-between gap-3">
+                <div
+                  key={idx}
+                  className="flex items-center justify-between gap-3"
+                >
                   <div className="flex-1">
                     {editingIndex === idx ? (
                       <InputStructure
@@ -167,13 +197,21 @@ const Strategies: React.FC = () => {
                         }}
                       />
                     ) : (
-                      <div className="text-sm text-neutral-800 cursor-text" onClick={() => handleEditClick(idx)}>
+                      <div
+                        className="text-sm text-neutral-800 cursor-text"
+                        onClick={() => handleEditClick(idx)}
+                      >
                         {idx + 1}. {val}
                       </div>
                     )}
                   </div>
 
-                  <button type="button" onClick={() => removeStrategy(idx)} className="p-2 rounded-full hover:bg-neutral-100 transition" aria-label={`حذف راهبرد ${idx + 1}`}>
+                  <button
+                    type="button"
+                    onClick={() => removeStrategy(idx)}
+                    className="p-2 rounded-full hover:bg-neutral-100 transition"
+                    aria-label={`حذف راهبرد ${idx + 1}`}
+                  >
                     <Close className="w-4 h-4" />
                   </button>
                 </div>
@@ -183,18 +221,31 @@ const Strategies: React.FC = () => {
         </div>
 
         <div className="mt-3">
-          <button type="button" onClick={addStrategy} className="p-[10px] hover:opacity-80 transition text-primary-1000 text-sm rounded-[12px] border border-primary-1000">
+          <button
+            type="button"
+            onClick={addStrategy}
+            className="p-[10px] hover:opacity-80 transition text-primary-1000 text-sm rounded-[12px] border border-primary-1000"
+          >
             افزودن راهبرد
           </button>
         </div>
       </div>
 
       <div className="flex justify-content-between gap-[48px] pt-[1rem]">
-        <button onClick={handleSubmit(handleClick)} disabled={loading} className="p-[12px] relative hover:opacity-70 transition bg-primary-1000 text-white text-sm rounded-[12px] border border-primary-1000 flex-1">
+        <button
+          onClick={handleSubmit(handleClick)}
+          disabled={loading}
+          className="p-[12px] relative hover:opacity-70 transition bg-primary-1000 text-white text-sm rounded-[12px] border border-primary-1000 flex-1"
+        >
           افزودن اعضا
-          {loading && <div className="loader w-[30px] border-[4px] border-primary-500 absolute top-[8px] left-[10px]"></div>}
+          {loading && (
+            <div className="loader w-[30px] border-[4px] border-primary-500 absolute top-[8px] left-[10px]"></div>
+          )}
         </button>
-        <button onClick={() => navigate(-1)} className="p-[12px] hover:opacity-70 transition text-neutral-500 text-sm rounded-[12px] border border-neutral-500 flex-1">
+        <button
+          onClick={() => navigate(-1)}
+          className="p-[12px] hover:opacity-70 transition text-neutral-500 text-sm rounded-[12px] border border-neutral-500 flex-1"
+        >
           انصراف
         </button>
       </div>

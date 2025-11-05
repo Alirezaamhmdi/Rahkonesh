@@ -25,7 +25,6 @@ import { UserProvider } from "./context/userContext.tsx";
 import { AreaProvider } from "./context/areaContext.tsx";
 import { ToastContainer } from "react-toastify";
 import Programs from "./pages/programs.tsx";
-import AddProgram from "./components/programs/123.tsx";
 import AddPro from "./components/programs/addPro.tsx";
 import { ProgramProvider } from "./context/programContext.tsx";
 const Footer = lazy(() => import('./components/foot_bar/foot_bar.tsx'))
