@@ -7,6 +7,7 @@ import svgr from "vite-plugin-svgr";
 
 
 export default defineConfig({
+    base: '/Rahkonesh/',
   plugins: [react() , svgr({
     svgrOptions: { icon: true },
   })],
