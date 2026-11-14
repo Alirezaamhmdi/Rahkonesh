@@ -7,23 +7,45 @@ export const ProgramValidator = yup
             .string()
             .trim()
             .required('نام الزامی است')
-            .max(50, 'حداکثر ۳۰ کاراکتر'),
+            .max(50, 'حداکثر 50 کاراکتر'),
 
-        manager: yup
+        manager_id: yup
             .string()
-            .required('مدیر حوزه الزامی است'),
+            .required('مدیر برنامه الزامی است'),
+        area_id: yup
+            .number()
+            .required('حوزه بالا دستی الزامی است'),
+        head_steering_council_id: yup
+            .string()
+        ,
+        secretary_steering_council_id: yup
+            .string()
+        ,
 
-        parent: yup
-            .string()
-            .nullable()
-            .required('لطفاً یک حوزه بالا‌دستی انتخاب کنید')
-            .trim()
+        strategies: yup
+            .array()
+            .of(
+                yup.object({
+                    title: yup.string()
+                })
+            )
+        ,
 
 
     })
-    .required();
 
-export type ProgramFormData = InferType<typeof ProgramValidator>;
+
+// export type ProgramFormData = InferType<typeof ProgramValidator>;
+export type ProgramFormData = {
+    name: string;
+    manager_id: string;
+    area_id: string;
+    head_steering_council_id: string | undefined;    // توجه: بدون ?
+    secretary_steering_council_id: string | undefined;
+    strategies: { title: string }[] | undefined;
+};
+
+
 
 
 export default ProgramValidator;

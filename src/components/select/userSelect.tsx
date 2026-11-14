@@ -42,7 +42,8 @@ const UserSelect: React.FC<{ getValues: any, setValue: any, errors: any }> = ({ 
                     setData({ data: res.data.data, count: res.data.count });
                     setLoading(false);
                 }).catch((err: any) => {
-                    setLoading(false); console.log(err);
+                    setLoading(false);
+                    console.log(err);
                 })
         }
     }, []);

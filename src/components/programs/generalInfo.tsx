@@ -1,70 +1,53 @@
-import { useRef, useState } from "react";
 import Close from "../../assets/icons/iconixto/linear/close.svg?react";
+import { useRef, useState, useEffect } from "react";
 import InputStructure from "../inputStructure";
 import instance from "../../server/instance";
 import { useForm } from "react-hook-form";
+import type { FieldErrors, UseFormGetValues, UseFormHandleSubmit, UseFormRegister, UseFormSetError, UseFormSetValue, UseFormWatch } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { UserValidator, type UserFormData } from "../../validator/userValidator";
-import { useNavigate } from "react-router-dom";
-import UserSelect from "../select/userSelect";
-import { ProgramValidator, type ProgramFormData } from "../../validator/programvalidator.tsx";
+import { ProgramValidator, type ProgramFormData } from "../../validator/programValidator.tsx";
 
-import { useAreas } from "../../context/areaContext";
 import UpstreamSelect from "./UpstreamSelect";
 
 import CheckboxList from "../checkbox/checkboxList";
 import type { CheckboxListItems } from "../checkbox/checkboxList";
+import { useNavigate } from "react-router-dom";
 
-const GeneralInfo: React.FC = () => {
+
+
+import { usePrograms } from "../../context/programContext";
+import UserSelect from "../select/userSelect.tsx";
+
+interface typeGenelaInfo {
+  register: UseFormRegister<any>,
+  // handleSubmit: (e?: React.BaseSyntheticEvent) => Promise<void>,
+  handleSubmit: UseFormHandleSubmit<any>,
+  setError: UseFormSetError<any>,
+  watch: UseFormWatch<any>,
+  setValue: UseFormSetValue<any>,
+  getValues: UseFormGetValues<any>,
+  errors: FieldErrors<any>,
+  boardMembers: CheckboxListItems[],
+  setBoardMembers: React.Dispatch<React.SetStateAction<CheckboxListItems[]>>,
+  loading: boolean,
+  handleClick: (formValues: ProgramFormData) => Promise<void>
+}
+const GeneralInfo: React.FC<typeGenelaInfo> = ({ register, setValue, getValues, watch, errors, boardMembers, setBoardMembers, loading, handleSubmit, handleClick }) => {
   const wrapperRef = useRef<HTMLDivElement | null>(null);
 
   const navigate = useNavigate();
-  const { addArea } = useAreas();
 
   const inputsRef = useRef<HTMLInputElement[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-  const {
-    register,
-    handleSubmit,
-    setError,
-    setValue,
-    getValues,
-    watch,
 
-    formState: { errors }
-
-  } = useForm<ProgramFormData>({
-    resolver: yupResolver(ProgramValidator),
-  });
-
-  const [boardMembers, setBoardMembers] = useState<CheckboxListItems[]>([
-    { key: "u1", name: "علی رضایی", image: " ", status: false },
-    { key: "u2", name: "مینا حسینی", image: " ", status: false },
-    { key: "u3", name: "سحر محمدی", image: " ", status: false },
-  ]);
-
-  async function handleClick(formValues: ProgramFormData) {
-    setLoading(true);
-    try {
-      const selectedBoard = boardMembers.filter(b => b.status).map(b => b.key);
-      const payload = {
-        ...formValues,
-        boardMembers: selectedBoard, // backend باید این فیلد رو قبول کنه یا نام مناسب رو قرار بده
-      };
-
-      const response = await instance.post(
-        `/area/create`,
-        payload
-      );
-      addArea(response.data)
-      navigate(-1)
-    } catch (err: any) {
-      console.log(err);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (boardMembers?.length) {
+      const allChecked = boardMembers.map(item => ({ ...item, status: true }));
+      setBoardMembers(allChecked);
     }
+  }, []);
 
-  }
+
+
   return (
 
     <div>
@@ -78,7 +61,7 @@ const GeneralInfo: React.FC = () => {
         </div>
         <>
           <UpstreamSelect
-            name="parent"
+            name="area_id"
             label="حوزه بالا دستی"
             options={[
               { label: "گروه مالی", value: "hoze1" },
@@ -86,26 +69,34 @@ const GeneralInfo: React.FC = () => {
             ]}
             register={register}
             setValue={setValue}
+            getValues={getValues}
             watch={watch}
             errors={errors}
             placeholder="حوزه را انتخاب کنید"
           />
         </>
 
+
+
+
         <div className="pt-[20px] w-1/2 max-md:w-full px-[8px]">
           <label className="text-neutral-600 text-xs mb-[16px] inline-block">مدیر برنامه</label>
           <UserSelect getValues={getValues} setValue={setValue} errors={errors} />
         </div>
+
 
         <div className="pt-[20px] w-1/2 max-md:w-full px-[8px]">
           <label className="text-neutral-600 text-xs mb-[16px] inline-block">رئیس شورای راهبری</label>
           <UserSelect getValues={getValues} setValue={setValue} errors={errors} />
         </div>
 
+
+
         <div className="pt-[20px] w-1/2 max-md:w-full px-[8px]">
           <label className="text-neutral-600 text-xs mb-[16px] inline-block">دبیر شورای راهبری</label>
           <UserSelect getValues={getValues} setValue={setValue} errors={errors} />
         </div>
+
 
 
         <div className="pt-[20px] w-1/2 max-md:w-full px-[8px]">
@@ -115,14 +106,7 @@ const GeneralInfo: React.FC = () => {
 
       </div>
 
-      <div className="flex justify-content-between gap-[48px] pt-[1rem]">
-        <button onClick={handleSubmit(handleClick)} disabled={loading} className="p-[12px] relative hover:opacity-70 transition bg-primary-1000 text-white text-sm rounded-[12px] border border-primary-1000 flex-1">افزودن اعضا
-          {loading && (
-            <div className="loader w-[30px] border-[4px] border-primary-500 absolute top-[8px] left-[10px]"></div>
-          )}
-        </button>
-        <button onClick={() => navigate(-1)} className="p-[12px] hover:opacity-70 transition text-neutral-500 text-sm rounded-[12px] border border-neutral-500 flex-1">انصراف</button>
-      </div>
+
     </div>
 
 

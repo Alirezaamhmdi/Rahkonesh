@@ -1,6 +1,4 @@
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
-import WorkspacesList from "../components/workspacesList";
-import Check from "../assets/icons/check.svg?react"
 import '../components/checkbox/checkboxList.css';
 import Folder2 from "../assets/icons/Iconex/Light/Folder.svg?react";
 import { useEffect, useState } from "react";
@@ -14,6 +12,7 @@ import Key from "../assets/icons/Iconex/Light/Edit 4.svg?react"
 import Close from "../assets/icons/vuesax/linear/close-circle2.svg?react"
 import { usePrograms } from "../context/programContext";
 import UsersListNAme from "../components/usersListName";
+import Cookies from 'js-cookie';
 
 
 const Programs: React.FC = () => {
@@ -33,7 +32,7 @@ const Programs: React.FC = () => {
     },
     {
       name: "حوزه بالا دستی",
-      target: "program",
+      target: "area",
       icon: <Users className="fill-white size-[20px]" />,
       width: "w-[20%]"
     },
@@ -68,7 +67,7 @@ const Programs: React.FC = () => {
 
   //pagin
   const { search } = useLocation();
-  const searchParams = new URLSearchParams(search);
+  const searchParams = new URLSearchParams(search); // read this later
   const page = Number(searchParams.get("page")) || 1;
   //pagin
   const formatTime = (date: Date) => {
@@ -77,7 +76,7 @@ const Programs: React.FC = () => {
   // API
   const handleDelete = (id: number) => () => {
 
-    instance.delete(`/programs/delete/${id}`)
+    instance.delete(`/programs/${id}`)
       .then(res => {
         removeProgram(id.toString())
       }).catch((err) => {
@@ -85,16 +84,27 @@ const Programs: React.FC = () => {
       })
   }
   useEffect(() => {
+    // console.log("location",location);
+    // console.log("search",search);
+    // console.log("page: ",page);
+
     if (!loading) {
       setLoading(true);
-      instance.get(`/programs/all?${query}&skip=${(page - 1) * 10}&take=${10}`)
+      console.log("one");
+      const auth = Cookies.get('auth.rahkonesh')
+      console.log(auth);
+
+      instance.get(`/programs?${query}&skip=${(page - 1) * 10}&take=${10}`)
         .then(res => {
+          console.log("ok :", res.data);
+          console.log("coockie :",);
 
           // setData({ data: transformed, count: res.data.count });
-          setProgramsAll({ data: res.data.data, count: res.data.count, time: new Date() })
+          setProgramsAll({ data: res.data.data, count: res.data.count})
           setLoading(false);
         }).catch((err) => {
-          setLoading(false); console.log(err);
+          setLoading(false);
+          console.log(err);
         })
     }
   }, [page]);
@@ -107,12 +117,15 @@ const Programs: React.FC = () => {
         name: i.name,
         manager: <div className="flex items-center">
           <div className="rounded-full bg-red-500 size-6"></div>
-          <p className="text-xs text-neutral-600 pr-[4px]">{i?.manager?.lastname} {i?.manager?.name}</p>
+          <p className="text-xs text-neutral-600 pr-[4px]">{i?.manager?.name} {i?.manager?.lastName}</p>
         </div>,
         directors:
-          <div><UsersListNAme Users={[{ name: "محمدی" }, { name: "محمدی" }, { name: "محمدی" }]} /></div>
+          <div><UsersListNAme Users={[
+            { name: `${i.headSteeringCouncil?.name} ${i.headSteeringCouncil?.lastName || ""}` },
+            { name: `${i.secretarySteeringCouncil?.name} ${i.secretarySteeringCouncil?.lastName || ""}` }
+          ]} /></div>
         ,
-        program: <p>program</p>,
+        area: <p>{i.area.name}</p>,
         action: <div className="flex items-center w-full justify-end">
           <Link to={'/edit-program/' + i.id} state={{ background: location }} className=" flex items-center hover:opacity-70 transition">
             <Key className="fill-neutral-700 size-[20px]" />
@@ -124,7 +137,7 @@ const Programs: React.FC = () => {
       })
     });
     setData({ data: transformed, count: program.count })
-  }, [program.time])
+  }, [program])
   return (<div className="px-[32px] py-[28px] h-full overflow-y-auto scrollbar-custom flex flex-col">
     <h1 className='text-2xl/[32px] snap-start bg-white'>برنامه ها </h1>
     <div className='sticky top-0 bg-white z-10 bg-white sticky top-[-28px] pb-[16px]'>

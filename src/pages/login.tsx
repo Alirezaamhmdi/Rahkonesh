@@ -2,7 +2,6 @@ import AuthLayout from "../layout/authLayout";
 import Cookies from "js-cookie";
 import instance from "../server/instance";
 import { useRef, useState } from "react";
-
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import LoginValidator, { type LoginFormData } from "../validator/loginValidator";

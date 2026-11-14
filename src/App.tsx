@@ -12,7 +12,7 @@ import Signup from "./pages/signup.tsx";
 import Users from "./pages/users.tsx";
 import UsersList from "./components/user/usersList.tsx";
 import InviteList from "./components/user/inviteList.tsx";
-import Workspaces from "./pages/workspaces.tsx";
+import Workspaces from "./pages/areas.tsx";
 import Invite from "./components/inviteUser/invite.tsx";
 import InviteMember from "./components/inviteUser/invitemember.tsx";
 import UserProfile from "./pages/userProfile.tsx";
@@ -25,7 +25,7 @@ import { UserProvider } from "./context/userContext.tsx";
 import { AreaProvider } from "./context/areaContext.tsx";
 import { ToastContainer } from "react-toastify";
 import Programs from "./pages/programs.tsx";
-import AddPro from "./components/programs/addPro.tsx";
+import AddProgram from "./components/programs/addProgram.tsx";
 import { ProgramProvider } from "./context/programContext.tsx";
 const Footer = lazy(() => import('./components/foot_bar/foot_bar.tsx'))
 
@@ -70,7 +70,7 @@ const App: React.FC = () => {
                     <Route path="add-user" element={<Invite />} />
                     <Route path="edit-user/:id" element={<EditUser />} />
                     <Route path="add-area" element={<AddArea />} />
-                    <Route path="add-program" element={<AddPro />} />
+                    <Route path="add-program" element={<AddProgram />} />
                     <Route path="edit-area/:id" element={<EditArea />} />
                     <Route path="invite-member/:id" element={<InviteMember />} />
                     <Route path="profile/:id" element={<UserProfile />} />

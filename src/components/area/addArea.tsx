@@ -1,10 +1,10 @@
+// import { UserValidator, type UserFormData } from "../../validator/userValidator";
 import { useRef, useState } from "react";
 import Close from "../../assets/icons/iconixto/linear/close.svg?react";
 import InputStructure from "../inputStructure";
 import instance from "../../server/instance";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { UserValidator, type UserFormData } from "../../validator/userValidator";
 import { useNavigate } from "react-router-dom";
 import UserSelect from "../select/userSelect";
 import { AreaValidator, type AreaFormData } from "../../validator/areaValidator";

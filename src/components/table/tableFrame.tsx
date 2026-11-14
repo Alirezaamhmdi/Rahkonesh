@@ -1,8 +1,8 @@
+// import TableRow from "./tableRow";
+// import TableRowMobile from "./tableRowMobile";
 import { lazy, Suspense, useEffect, useRef, useState, type SetStateAction } from "react";
 import Pagination from "./pagination";
 import TableHeader, { type TableHeaderType } from "./tableHeader";
-// import TableRow from "./tableRow";
-// import TableRowMobile from "./tableRowMobile";
 import useMediaQuery from "../../hooks/useMediaQuery";
 const TableRow = lazy(() => import("./tableRow"));
 const TableRowMobile = lazy(() => import("./tableRowMobile"));

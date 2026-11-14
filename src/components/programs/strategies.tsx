@@ -1,19 +1,37 @@
 import { useEffect, useRef, useState } from "react";
 import Close from "../../assets/icons/iconixto/linear/close.svg?react";
 import InputStructure from "../inputStructure";
-import instance from "../../server/instance";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { AreaValidator, type AreaFormData } from "../../validator/areaValidator";
+import type {
+  UseFormHandleSubmit,
+  UseFormRegister,
+  UseFormSetValue,
+  UseFormWatch,
+} from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useAreas } from "../../context/areaContext";
+import type { ProgramFormData } from "../../validator/programValidator";
 
-const Strategies: React.FC = () => {
+/* ✅ CLEAN PROPS */
+interface StrategiesProps {
+  register: UseFormRegister<any>;
+  handleSubmit: UseFormHandleSubmit<any>;
+  watch: UseFormWatch<any>;
+  setValue: UseFormSetValue<any>;
+  errors: any;
+  loading: boolean;
+  handleClick: (formValues: ProgramFormData) => Promise<void>;
+}
+
+const Strategies: React.FC<StrategiesProps> = ({
+  register,
+  setValue,
+  watch,
+  errors,
+  loading,
+  handleSubmit,
+  handleClick,
+}) => {
   const navigate = useNavigate();
-  const { addArea } = useAreas();
-
   const inputsRef = useRef<HTMLInputElement[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
 
   const [strategies, setStrategies] = useState<string[]>([
     "راهبرد 1",
@@ -21,15 +39,6 @@ const Strategies: React.FC = () => {
   ]);
 
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    formState: { errors },
-  } = useForm<AreaFormData>({
-    resolver: yupResolver(AreaValidator),
-  });
 
   const getInputIndexForStrategy = (strategyIdx: number) => strategyIdx + 1;
 
@@ -39,17 +48,15 @@ const Strategies: React.FC = () => {
     const el = inputsRef.current[idx];
     if (el) {
       setTimeout(() => el.focus(), 0);
-      setTimeout(() => {
-        try {
-          const len = el.value.length;
-          el.setSelectionRange(len, len);
-        } catch { }
-      }, 10);
+      try {
+        const len = el.value.length;
+        el.setSelectionRange(len, len);
+      } catch {}
     }
   }, [editingIndex]);
 
   const handleEditClick = (idx: number) => {
-    setValue(`strategies.${idx}` as any, strategies[idx]);
+    setValue(`strategies.${idx}.title` as any, strategies[idx]);
     setEditingIndex(idx);
   };
 
@@ -58,121 +65,65 @@ const Strategies: React.FC = () => {
       const pos = getInputIndexForStrategy(editingIndex);
       const el = inputsRef.current[pos];
       const currentVal = el ? el.value.trim() : strategies[editingIndex];
+
       if (currentVal === "") {
-        setStrategies((prev) => {
-          const next = prev.filter((_, i) => i !== editingIndex);
-          try {
-            next.forEach((s, i) => setValue(`strategies.${i}` as any, s));
-          } catch { }
-          return next;
-        });
-        inputsRef.current = inputsRef.current.filter(
-          (_, i) => i !== pos
-        );
-        setEditingIndex(null);
+        setStrategies((prev) => prev.filter((_, i) => i !== editingIndex));
       } else {
         setStrategies((prev) => {
           const copy = [...prev];
           copy[editingIndex] = currentVal;
-          try {
-            copy.forEach((s, i) => setValue(`strategies.${i}` as any, s));
-          } catch { }
           return copy;
         });
-        setEditingIndex(null);
       }
+
+      setEditingIndex(null);
     }
 
-    const newIndex = strategies.length;
-    setStrategies((prev) => {
-      const next = [...prev, ""];
-      try {
-        setValue(`strategies.${next.length - 1}` as any, "");
-      } catch { }
-      return next;
-    });
-    setEditingIndex(newIndex);
+    setStrategies((prev) => [...prev, ""]);
+    setEditingIndex(strategies.length);
+    setValue(`strategies.${strategies.length}.title` as any, "");
   };
 
   const removeStrategy = (index: number) => {
-    setStrategies((prev) => {
-      const next = prev.filter((_, i) => i !== index);
-      try {
-        next.forEach((s, i) => setValue(`strategies.${i}` as any, s));
-      } catch { }
-      return next;
-    });
-
-    setEditingIndex((prev) => {
-      if (prev === null) return null;
-      if (prev === index) return null;
-      if (prev > index) return prev - 1;
-      return prev;
-    });
-
-    const posToRemove = getInputIndexForStrategy(index);
-    inputsRef.current = inputsRef.current.filter((_, i) => i !== posToRemove);
+    setStrategies((prev) => prev.filter((_, i) => i !== index));
+    setEditingIndex(null);
+    inputsRef.current = inputsRef.current.filter(
+      (_, i) => i !== getInputIndexForStrategy(index)
+    );
   };
 
   const handleFinishEdit = async () => {
     if (editingIndex === null) return;
-    try {
-      const pos = getInputIndexForStrategy(editingIndex);
-      const el = inputsRef.current[pos];
-      const newVal = el ? el.value.trim() : strategies[editingIndex];
-      if (newVal === "") {
-        setStrategies((prev) => prev.filter((_, i) => i !== editingIndex));
-        inputsRef.current = inputsRef.current.filter((_, i) => i !== pos);
-        try {
-          setTimeout(() => {
-            strategies
-              .filter((_, i) => i !== editingIndex)
-              .forEach((s, i) => setValue(`strategies.${i}` as any, s));
-          }, 0);
-        } catch { }
-      } else {
-        setStrategies((prev) => {
-          const copy = [...prev];
-          copy[editingIndex] = newVal;
-          try {
-            copy.forEach((s, i) => setValue(`strategies.${i}` as any, s));
-          } catch { }
-          return copy;
-        });
-      }
-    } finally {
-      setEditingIndex(null);
+
+    const pos = getInputIndexForStrategy(editingIndex);
+    const el = inputsRef.current[pos];
+    const newVal = el ? el.value.trim() : "";
+
+    if (newVal === "") {
+      setStrategies((prev) => prev.filter((_, i) => i !== editingIndex));
+    } else {
+      setStrategies((prev) => {
+        const copy = [...prev];
+        copy[editingIndex] = newVal;
+        return copy;
+      });
     }
+
+    setEditingIndex(null);
   };
-
-  async function handleClick(formValues: AreaFormData) {
-    setLoading(true);
-    try {
-      const payload = {
-        ...formValues,
-        strategies,
-      };
-
-      const response = await instance.post(`/area/create`, payload);
-      addArea(response.data);
-      navigate(-1);
-    } catch (err: any) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  }
 
   return (
     <div>
       <div className="mt-4">
-        <label className="text-neutral-600 text-xs mb-[8px] inline-block">
-          لیست راهبردها
+        <label className="text-neutral-600 text-lg mb-[8px] inline-block">
+          راهبردهای مصوب
         </label>
 
         <div className="space-y-2">
           {strategies.length === 0 ? (
-            <div className="text-neutral-500 text-sm">هیچ راهبردی وجود ندارد.</div>
+            <div className="text-neutral-500 text-sm">
+              هیچ راهبردی وجود ندارد.
+            </div>
           ) : (
             strategies.map((val, idx) => {
               const inputIndex = getInputIndexForStrategy(idx);
@@ -186,15 +137,13 @@ const Strategies: React.FC = () => {
                       <InputStructure
                         className="px-[20px] text-xs border border-neutral-300 rounded-[12px] h-[2.75rem] w-full focus-visible:border-primary-1000 transition"
                         register={register}
-                        name={`strategies.${idx}` as any}
-                        type={"text"}
-                        placeholder={"راهبرد نمونه"}
+                        name={`strategies.${idx}.title` as any}
+                        type="text"
+                        placeholder="راهبرد نمونه"
                         Ref={inputsRef}
                         index={inputIndex}
                         errors={errors}
-                        onSubmit={async () => {
-                          await handleFinishEdit();
-                        }}
+                        onSubmit={handleFinishEdit}
                       />
                     ) : (
                       <div
@@ -210,7 +159,6 @@ const Strategies: React.FC = () => {
                     type="button"
                     onClick={() => removeStrategy(idx)}
                     className="p-2 rounded-full hover:bg-neutral-100 transition"
-                    aria-label={`حذف راهبرد ${idx + 1}`}
                   >
                     <Close className="w-4 h-4" />
                   </button>
@@ -229,25 +177,6 @@ const Strategies: React.FC = () => {
             افزودن راهبرد
           </button>
         </div>
-      </div>
-
-      <div className="flex justify-content-between gap-[48px] pt-[1rem]">
-        <button
-          onClick={handleSubmit(handleClick)}
-          disabled={loading}
-          className="p-[12px] relative hover:opacity-70 transition bg-primary-1000 text-white text-sm rounded-[12px] border border-primary-1000 flex-1"
-        >
-          افزودن اعضا
-          {loading && (
-            <div className="loader w-[30px] border-[4px] border-primary-500 absolute top-[8px] left-[10px]"></div>
-          )}
-        </button>
-        <button
-          onClick={() => navigate(-1)}
-          className="p-[12px] hover:opacity-70 transition text-neutral-500 text-sm rounded-[12px] border border-neutral-500 flex-1"
-        >
-          انصراف
-        </button>
       </div>
     </div>
   );

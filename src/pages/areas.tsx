@@ -1,19 +1,19 @@
-import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
-import WorkspacesList from "../components/workspacesList";
-import Check from "../assets/icons/check.svg?react"
-import '../components/checkbox/checkboxList.css';
-import Folder2 from "../assets/icons/Iconex/Light/Folder.svg?react";
+// import WorkspacesList from "../components/workspacesList";
+// import Check from "../assets/icons/check.svg?react"
 import { useEffect, useState } from "react";
-import TableFrame from "../components/table/tableFrame";
-import Left from "../assets/icons/fi_align-left.svg?react";
-import Users from "../assets/icons/Iconex/Light/User.svg?react";
+import { Link, useLocation } from "react-router-dom";
 import Calendar from "../assets/icons//Iconex/Light/Calendar.svg?react";
-import instance from "../server/instance";
-import Key from "../assets/icons/Iconex/Light/Edit 2.svg?react"
-import Close from "../assets/icons/vuesax/linear/close-circle.svg?react"
+import Left from "../assets/icons/fi_align-left.svg?react";
+import Key from "../assets/icons/Iconex/Light/Edit 2.svg?react";
+import Folder2 from "../assets/icons/Iconex/Light/Folder.svg?react";
+import Users from "../assets/icons/Iconex/Light/User.svg?react";
+import Close from "../assets/icons/vuesax/linear/close-circle.svg?react";
+import '../components/checkbox/checkboxList.css';
+import TableFrame from "../components/table/tableFrame";
 import { useAreas } from "../context/areaContext";
+import instance from "../server/instance";
 
-const Workspaces: React.FC = () => {
+const Areas: React.FC = () => {
   const { area, setAreasAll, removeArea } = useAreas();
 
   const location = useLocation();
@@ -113,14 +113,12 @@ const Workspaces: React.FC = () => {
     });
     setData({ data: transformed, count: area.count })
   }, [area.time])
+
   return (<div className="px-[32px] py-[28px] h-full overflow-y-auto scrollbar-custom flex flex-col">
     <h1 className='text-2xl/[32px] snap-start bg-white'> حوزه ها </h1>
     <div className='sticky top-0 bg-white z-10 bg-white sticky top-[-28px] pb-[16px]'>
       <div className='flex max-md:gap-[24px] max-md:flex-col md:justify-between reletive items-end md:items-center mt-[20px]'>
-        <div className="relative pr-[24px]">
-        </div>
-
-
+        <div className="relative pr-[24px]"></div>
         <Link to="/add-area" className="flex items-center text-xs md:text-base bg-secondary-1000 text-white py-[12px] px-[16px]  md:py-[16px] md:px-[32px] rounded-[12px] md:rounded-[16px] hover:opacity-70 transition" state={{ background: location }}>
           <Folder2 className="md:size-[1.36856rem] size-[1rem] fill-white" />
           <span className="pr-[8px]">ایجاد حوزه</span>
@@ -133,4 +131,4 @@ const Workspaces: React.FC = () => {
   </div>)
 
 }
-export default Workspaces;
+export default Areas;
